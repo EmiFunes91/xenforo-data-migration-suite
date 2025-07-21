@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Script final para limpiar y transformar el archivo 04_posts_cleaned.sql
-Convierte sentencias INSERT con subconsultas a INSERT IGNORE con valores directos
+Final script to clean and transform the 04_posts_cleaned.sql file
+Converts INSERT statements with subqueries to INSERT IGNORE with direct values
 """
 
 import re
@@ -14,7 +14,7 @@ def escape_sql_string(text):
     if text is None:
         return 'NULL'
     
-    # Convertir 'NULL' string a NULL real
+    # Convert 'NULL' string to real NULL
     if text.strip() == "'NULL'":
         return 'NULL'
     
@@ -33,48 +33,48 @@ def escape_sql_string(text):
     return text
 
 def extract_column_names(insert_statement):
-    """Extrae los nombres de las columnas de una sentencia INSERT"""
+    """Extract column names from an INSERT statement"""
     match = re.search(r'INSERT INTO xf_post \((.*?)\)', insert_statement, re.IGNORECASE | re.DOTALL)
     if match:
         columns_str = match.group(1)
-        # Limpiar espacios y dividir por comas
+        # Clean spaces and split by commas
         columns = [col.strip() for col in columns_str.split(',')]
         return columns
     return []
 
 def convert_subquery_to_value(subquery, default_value=9999):
-    """Convierte una subconsulta a un valor directo"""
-    # Si es una subconsulta de user_id, reemplazar con 9999
+    """Convert a subquery to a direct value"""
+    # If it's a user_id subquery, replace with 9999
     if 'SELECT user_id FROM xf_user WHERE username' in subquery:
         return str(default_value)
     
-    # Si es una subconsulta de thread_id, reemplazar con 9999
+    # If it's a thread_id subquery, replace with 9999
     if 'SELECT thread_id FROM xf_thread WHERE' in subquery:
         return str(default_value)
     
-    # Para otras subconsultas, intentar extraer un valor o usar default
+    # For other subqueries, try to extract a value or use default
     return str(default_value)
 
 def process_insert_statement(statement):
-    """Procesa una sentencia INSERT completa"""
-    # Extraer columnas
+    """Process a complete INSERT statement"""
+    # Extract columns
     columns = extract_column_names(statement)
     if not columns:
         return None
     
-    # Buscar la parte SELECT de la sentencia
+    # Find the SELECT part of the statement
     select_match = re.search(r'SELECT\s+(.*)', statement, re.IGNORECASE | re.DOTALL)
     if not select_match:
         return None
     
     select_part = select_match.group(1)
     
-    # Dividir los valores de manera más simple
-    # Primero, reemplazar subconsultas con valores por defecto
+    # Split values in a simpler way
+    # First, replace subqueries with default values
     select_part = re.sub(r'\(SELECT user_id FROM xf_user WHERE username[^)]+\)', '9999', select_part)
     select_part = re.sub(r'\(SELECT thread_id FROM xf_thread WHERE[^)]+\)', '9999', select_part)
     
-    # Ahora dividir por comas, pero respetando strings
+    # Now split by commas, but respect strings
     values = []
     current_value = ""
     in_string = False
@@ -101,41 +101,41 @@ def process_insert_statement(statement):
         
         current_value += char
     
-    # Agregar el último valor
-    if current_value.strip():
-        values.append(current_value.strip())
+            # Add the last value
+        if current_value.strip():
+            values.append(current_value.strip())
     
-    # Procesar cada valor
-    processed_values = []
-    for value in values:
-        value = value.strip()
+        # Process each value
+        processed_values = []
+        for value in values:
+            value = value.strip()
+            
+            # If it's a string, escape it
+            if value.startswith("'") and value.endswith("'"):
+                processed_value = escape_sql_string(value)
+            else:
+                processed_value = value
+            
+            processed_values.append(processed_value)
         
-        # Si es un string, escapar
-        if value.startswith("'") and value.endswith("'"):
-            processed_value = escape_sql_string(value)
-        else:
-            processed_value = value
+        # Add NULL values for missing columns
+        while len(processed_values) < len(columns):
+            processed_values.append('NULL')
         
-        processed_values.append(processed_value)
-    
-    # Agregar valores NULL para las columnas faltantes
-    while len(processed_values) < len(columns):
-        processed_values.append('NULL')
-    
-    # Construir la nueva sentencia INSERT IGNORE
+        # Build the new INSERT IGNORE statement
     columns_str = ', '.join(columns)
     values_str = ', '.join(processed_values)
     
     return f"INSERT IGNORE INTO xf_post ({columns_str}) VALUES ({values_str});"
 
 def clean_posts_file(input_file, output_file):
-    """Limpia el archivo de posts completo"""
+    """Clean the complete posts file"""
     print(f"Processing {input_file}...")
     
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # Dividir en sentencias individuales
+    # Split into individual statements
     statements = []
     current_statement = ""
     in_statement = False
@@ -156,9 +156,9 @@ def clean_posts_file(input_file, output_file):
             in_statement = True
         elif in_statement:
             current_statement += " " + line
-            # Buscar el final de la sentencia
+            # Find the end of the statement
             if line.endswith(';') or line.endswith("'") or line.endswith('"'):
-                # Verificar si la siguiente línea es un nuevo INSERT
+                # Check if the next line is a new INSERT
                 if i + 1 < len(lines) and lines[i + 1].strip().startswith('INSERT INTO xf_post'):
                     statements.append(current_statement)
                     current_statement = ""
@@ -166,13 +166,13 @@ def clean_posts_file(input_file, output_file):
         
         i += 1
     
-    # Agregar la última sentencia si existe
+    # Add the last statement if it exists
     if current_statement:
         statements.append(current_statement)
     
     print(f"Found {len(statements)} INSERT statements")
     
-    # Procesar cada sentencia
+    # Process each statement
     processed_statements = []
     for i, statement in enumerate(statements):
         if i % 100 == 0:
@@ -183,11 +183,11 @@ def clean_posts_file(input_file, output_file):
             processed_statements.append(processed)
         else:
             print(f"Warning: Could not process statement {i+1}")
-            # Debug: mostrar la sentencia problemática
-            if i < 3:  # Solo mostrar las primeras 3 para debug
+            # Debug: show the problematic statement
+            if i < 3:  # Only show the first 3 for debug
                 print(f"Problematic statement: {statement[:300]}...")
     
-    # Escribir el archivo de salida
+    # Write the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write("-- Cleaned and transformed posts for XenForo 2.x\n")
         f.write("-- Generated from 04_posts_cleaned.sql\n\n")

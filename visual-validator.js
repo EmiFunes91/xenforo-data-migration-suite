@@ -215,10 +215,10 @@ class VisualValidator {
    */
   hasSpacingIssues(content) {
     const issues = [
-      /\n{4,}/, // Múltiples líneas vacías
-      /\s{3,}/, // Múltiples espacios
-      /^\s+$/,  // Líneas solo con espacios
-      /\t/,     // Tabs (no recomendados)
+      /\n{4,}/, // Multiple empty lines
+      /\s{3,}/, // Multiple spaces
+      /^\s+$/,  // Lines with only spaces
+      /\t/,     // Tabs (not recommended)
     ];
     
     return issues.some(pattern => pattern.test(content));
@@ -231,11 +231,11 @@ class VisualValidator {
    */
   hasFormattingIssues(content) {
     const issues = [
-      /\[b\]\s*\[\/b\]/, // Tags vacíos
+      /\[b\]\s*\[\/b\]/, // Empty tags
       /\[i\]\s*\[\/i\]/,
-      /\[url\].*?\[\/url\]/, // URLs sin texto
-      /\[img\].*?\[\/img\]/, // Imágenes sin src
-      /\[quote\].*?\[\/quote\]/, // Quotes vacíos
+      /\[url\].*?\[\/url\]/, // URLs without text
+      /\[img\].*?\[\/img\]/, // Images without src
+      /\[quote\].*?\[\/quote\]/, // Empty quotes
     ];
     
     return issues.some(pattern => pattern.test(content));

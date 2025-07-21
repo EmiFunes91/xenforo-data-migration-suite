@@ -142,11 +142,11 @@ async function wait(seconds) {
 }
 
 /**
- * Ejecuta una función con reintentos y espera entre intentos
- * @param {Function} fn - función async a ejecutar
+ * Execute a function with retries and wait between attempts
+ * @param {Function} fn - async function to execute
  * @param {number} maxRetries
  * @param {number} waitSeconds
- * @param {Function} [onError] - callback en error
+ * @param {Function} [onError] - error callback
  */
 async function retry(fn, maxRetries, waitSeconds, onError) {
   let lastError;

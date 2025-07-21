@@ -1,4 +1,4 @@
-# 🚀 XenForo Migration Tool
+# 🚀 XenForo Data Migration Suite
 
 **Professional migration tool for importing data from OffshoreCorpTalk to XenForo**
 
@@ -8,7 +8,7 @@
 
 ## 📋 Overview
 
-This professional-grade migration tool provides a complete solution for importing forum data from OffshoreCorpTalk (OCT) to XenForo. It features incremental scraping, robust checkpoint management, visual validation, and comprehensive reporting.
+This professional-grade migration suite provides a complete solution for importing forum data from OffshoreCorpTalk (OCT) to XenForo. It features incremental scraping, robust checkpoint management, visual validation, comprehensive reporting, and mass messaging capabilities.
 
 ### ✨ Key Features
 
@@ -20,6 +20,8 @@ This professional-grade migration tool provides a complete solution for importin
 - ✅ **Comprehensive Reporting** (JSON + HTML)
 - ✅ **Error Recovery** and logging
 - ✅ **Backup Management** before operations
+- ✅ **Mass Messaging System** for testing
+- ✅ **SQL Processing Tools** for data cleanup
 
 ## 🏗️ Architecture
 
@@ -27,6 +29,8 @@ This professional-grade migration tool provides a complete solution for importin
 OCT (OffshoreCorpTalk) → Scraper → PostgreSQL → Migrator → XenForo (MariaDB)
                                     ↓
                               Checkpoints & Validation
+                                    ↓
+                              Mass Messaging & Testing
 ```
 
 ## 🚀 Quick Start
@@ -36,7 +40,7 @@ OCT (OffshoreCorpTalk) → Scraper → PostgreSQL → Migrator → XenForo (Mari
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd xenforo-migration-tool
+cd xenforo-data-migration-suite
 
 # Install dependencies
 npm install
@@ -266,7 +270,7 @@ The tool includes automatic error recovery:
 ## 📁 File Structure
 
 ```
-xenforo-migration-tool/
+xenforo-data-migration-suite/
 ├── cli-migration.js          # Main CLI interface
 ├── checkpoint-manager.js     # Checkpoint management
 ├── visual-validator.js       # Validation system
@@ -274,6 +278,9 @@ xenforo-migration-tool/
 ├── migrate_pg_to_xf.js       # Migration engine
 ├── backup_mariadb.js         # Backup utility
 ├── restore_dump.js           # Restore utility
+├── mass-messenger/           # Mass messaging system
+├── sql-fix-scripts/          # SQL processing tools
+├── docs/                     # Documentation
 ├── package.json              # Dependencies
 ├── README.md                 # This file
 ├── .env                      # Configuration (create this)
@@ -331,6 +338,15 @@ For support and questions:
 - **v0.8.0**: Alpha version with scraper and migrator
 
 ---
+
+## 📚 Additional Documentation
+
+For detailed technical documentation, see the `docs/` folder:
+
+- [Complete Application Documentation](docs/COMPLETE_APPLICATION_DOCUMENTATION.md)
+- [Project Analysis](docs/PROJECT_ANALYSIS.md)
+- [Implementation Summary](docs/COMPLETED_IMPLEMENTATION.md)
+- [Technical Analysis](docs/TECHNICAL_ANALYSIS.md)
 
 ## Scraper Usage (Node.js)
 
