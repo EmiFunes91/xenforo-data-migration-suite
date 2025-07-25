@@ -2,8 +2,10 @@
 
 **Professional migration tool for importing data from OffshoreCorpTalk to XenForo**
 
+🔒 This repository is protected by a Custom Software License created by Emilio Funes. Commercial use is strictly prohibited. See [LICENSE](./LICENSE) for full terms.
+
 [![Node.js](https://img.shields.io/badge/Node.js-16+-green.svg)](https://nodejs.org/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Custom-red.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](package.json)
 
 ## 📋 Overview
@@ -320,7 +322,7 @@ The tool uses Winston for professional logging:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is protected by a Custom Software License created by Emilio Funes. Commercial use, redistribution, and derivative works are strictly prohibited without express written permission. See the [LICENSE](LICENSE) file for full terms and restrictions.
 
 ## 🆘 Support
 
